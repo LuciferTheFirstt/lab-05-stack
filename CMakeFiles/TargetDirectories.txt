@@ -1,0 +1,4 @@
+/home/luciferthefirstt/LuciferTheFirstt/workspace/workspace/projects/AL/lab05/lab-05-stack/CMakeFiles/rebuild_cache.dir
+/home/luciferthefirstt/LuciferTheFirstt/workspace/workspace/projects/AL/lab05/lab-05-stack/CMakeFiles/edit_cache.dir
+/home/luciferthefirstt/LuciferTheFirstt/workspace/workspace/projects/AL/lab05/lab-05-stack/CMakeFiles/test_stack.dir
+/home/luciferthefirstt/LuciferTheFirstt/workspace/workspace/projects/AL/lab05/lab-05-stack/CMakeFiles/test.dir

@@ -1,0 +1,20 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/luciferthefirstt/LuciferTheFirstt/workspace/workspace/projects/AL/lab05/lab-05-stack/main.cpp
+iostream
+-
+header.hpp
+/home/luciferthefirstt/LuciferTheFirstt/workspace/workspace/projects/AL/lab05/lab-05-stack/header.hpp
+complex
+-
+
+include/header.hpp
+iostream
+-
+
