@@ -5,7 +5,7 @@
 using namespace std;
 
 int main() {
-    stack<int> st;
+    Stack<int> st;
     st.push(10);
     cout << "head of stack after push: " << st.head() << endl;
     st.push_emplace(1,2,3);
