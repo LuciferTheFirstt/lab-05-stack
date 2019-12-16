@@ -1,86 +1,103 @@
 #include <iostream>
 
+template <typename T>
+struct Node
+{
+	T value;
+	Node* next;
+};
 
 template <typename T>
-class stack
+class Stack
 {
-  struct Node
-    {
-        T value;
-        Node *next;
-    };
-   Node *top;
 public:
-  stack(): top(nullptr){};
-  stack(const stack&) = delete;
-  stack& operator=(const stack&) = delete;
+	Stack() : top( nullptr ) {};
 
-  void push(T&& value)
-   {
-     Node *node = new Node;
-     node->velue =p;
-     node->next=top;
-     top=node;
-   }
+	Stack( const Stack& ) = delete;
+	Stack& operator=( const Stack& ) = delete;
 
-  void push(const T& value)
-  {
-    Node *node = new Node;
-    node->value = value;
-    node->next = top;
-    top = node;
-  }
+	Stack( Stack&& );
+	Stack& operator=( Stack&& );
 
-  void pop()
-  {
-   T value = top->value;
-    Node *tmp = top;
-    top = top->next;
-    delete tmp;
-  }
+	void push( T&& value )
+	{
+		Node<T>* node = new Node<T>();
+		node->value = std::move(value);
+		node->next = top;
+		top = node;
+	}
 
-  const T& head() const
-  {
-   return top->value;
-  }
+	void push( const T& value )
+	{
+		Node<T>* node = new Node<T>();
+		node->value = value;
+		node->next = top;
+		top = node;
+	}
+	
+	const T& head() const
+	{
+		return top->value;
+	}
 
-  template <typename ... Args>
+	Node<T>* get_top() const
+	{
+		return top;
+	}
 
-  void push_emplace(Args&&... value)
-  {
-    for (auto p : std::initializer_list<T>{value...})
-    {
-        Node *node = new Node;
-        node->value = p;
-        node->next = top;
-        top = node;
-    }
-  }
+	void reset()
+	{
+		top = nullptr;
+	}
 
-  void push(T&& value)
-  {
-    Node *node = new Node;
-    node->value = value;
-    node->next = top;
-    top = node;
-  }
+	template <typename ... Args>
+	void push_emplace( Args&&... value )
+	{
+		for( auto p : std::initializer_list<T>{ value... } )
+		{
+			Node<T>* node = new Node<T>();
+			node->value = p;
+			node->next = top;
+			top = node;
+		}
+	}
 
-  T pop()
-  {
-   T value = top->value;
-    Node *tmp = top;
-    top = top->next;
-    delete tmp;
-    return value;
-  }
+	T pop()
+	{
+		T value = top->value;
+		Node<T>* tmp = top;
+		top = top->next;
+		delete tmp;
+		return value;
+	}
 
-  ~stack()
-  {
-    while (top)
-    {
-        Node *tmp = top;
-        top = top->next;
-        delete tmp;
-    }
-  }
+	~Stack()
+	{
+		while( top )
+		{
+			Node<T>* tmp = top;
+			top = top->next;
+			delete tmp;
+		}
+	}
+
+private:
+	Node<T>* top;
 };
+
+
+template<typename T>
+Stack<T>::Stack( Stack&& r)
+{
+	this->top = r.get_top();
+	r.reset();
+}
+
+template<typename T>
+Stack<T>& Stack<T>::operator=( Stack&& r )
+{
+	this->top = r.get_top();
+	r.reset();
+	return *this;
+}
+
