@@ -1,17 +1,16 @@
 #include <iostream>
-
-template <typename T>
-struct Node
-{
-	T value;
-	Node* next;
-};
+#include <memory>
 
 template <typename T>
 class Stack
 {
 public:
-	Stack() : top( nullptr ) {};
+	Stack(){
+
+		this->capacity = this->st_capacity;
+	 	this->size = 0;
+		this->st_ptr.reset(new T [this->st_capacity]);
+	}
 
 	Stack( const Stack& ) = delete;
 	Stack& operator=( const Stack& ) = delete;
@@ -21,83 +20,99 @@ public:
 
 	void push( T&& value )
 	{
-		Node<T>* node = new Node<T>();
-		node->value = std::move(value);
-		node->next = top;
-		top = node;
+		if (this->isFull()) {
+        		throw std::logic_error("Stack is full");
+    		}
+    		this->size++;
+    		std::unique_ptr<T> new_st(new T [this->capacity]);
+
+    		for(int i = 0; i < this->size - 1; i++) {
+        		new_st.get()[i] = this->st_ptr.get()[i];
+    		}
+    		new_st.get()[this->size - 1] = std::move(value);
+
+		this->st_ptr.swap(new_st);
 	}
 
 	void push( const T& value )
 	{
-		Node<T>* node = new Node<T>();
-		node->value = value;
-		node->next = top;
-		top = node;
+		if (this->isFull()){
+        		throw std::logic_error("Stack is full");
+    		}
+    		this->size++;
+
+    		std::unique_ptr<T> new_st(new T [this->capacity]);
+
+		for(int i = 0; i < this->size - 1; i++) {
+        		new_st.get()[i] = this->st_ptr.get()[i];
+    		}
+    		new_st.get()[this->size - 1] = value;
+
+    		this->st_ptr.swap(new_st);
 	}
 	
 	const T& head() const
 	{
-		return top->value;
+		if (!this->isEmpty())
+    			return this->st_ptr.get()[this->size - 1];
+    		else
+        		throw std::logic_error("Stack is empty");
 	}
 
-	Node<T>* get_top() const
-	{
-		return top;
+	bool isEmpty() const {
+     		return this->size == 0;
 	}
 
-	void reset()
-	{
-		top = nullptr;
+	bool isFull() const {
+	     return this->size > 65536;
 	}
 
 	template <typename ... Args>
 	void push_emplace( Args&&... value )
 	{
-		for( auto p : std::initializer_list<T>{ value... } )
-		{
-			Node<T>* node = new Node<T>();
-			node->value = p;
-			node->next = top;
-			top = node;
-		}
+		T args [] = {value...};
+
+    		for(const auto& e: args) {
+        		this->push(e);
+    		}
 	}
 
 	T pop()
 	{
-		T value = top->value;
-		Node<T>* tmp = top;
-		top = top->next;
-		delete tmp;
-		return value;
+		if(!this->isEmpty()) {
+        		this->size--;
+    		}
+    		else
+        		throw std::logic_error("Stack is empty");
 	}
 
-	~Stack()
-	{
-		while( top )
-		{
-			Node<T>* tmp = top;
-			top = top->next;
-			delete tmp;
-		}
-	}
+	~Stack()= default;
 
 private:
-	Node<T>* top;
+	static const unsigned int st_capacity = 8;
+	unsigned int capacity;
+	unsigned char size;
+	std::unique_ptr<T> st_ptr;
 };
 
 
 template<typename T>
 Stack<T>::Stack( Stack&& r)
 {
-	this->top = r.get_top();
-	r.reset();
+	std::swap(this->capacity, r.capacity);
+	std::swap(this->size, r.size);
+	std::swap(this->arr_ptr, r.arr_ptr);
 }
 
 template<typename T>
 Stack<T>& Stack<T>::operator=( Stack&& r )
 {
-	this->top = r.get_top();
-	r.reset();
-	return *this;
+	if(std::move(r) != this) {
+        	std::swap(this->capacity, r.capacity);
+        	std::swap(this->size, r.size);
+        	std::swap(this->arr_ptr, r.arr_ptr);
+    	}
+
+    	return *this;
 }
 
