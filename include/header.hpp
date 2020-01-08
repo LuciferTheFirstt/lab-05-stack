@@ -89,7 +89,7 @@ public:
 	~Stack()= default;
 
 private:
-	static const unsigned int st_capacity = 8;
+	static const unsigned int st_capacity = 16;
 	unsigned int capacity;
 	unsigned char size;
 	std::unique_ptr<T> st_ptr;
